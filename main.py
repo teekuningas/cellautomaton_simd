@@ -12,7 +12,6 @@ from automaton import apply_rule
 if __name__ == "__main__":
     """Run as a script."""
 
-
     initial_pattern_str = """
         wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
         wooxooooooooxoooooooooooooooooooow
@@ -35,7 +34,7 @@ if __name__ == "__main__":
     """
 
     initial_pattern = []
-    for row in initial_pattern_str.split('\n'):
+    for row in initial_pattern_str.split("\n"):
         rowvals = []
         for letter in row.strip():
             rowvals.append(letter)
@@ -65,7 +64,9 @@ if __name__ == "__main__":
                 1,
             )
             paths.append(rect)
-    collection = clt.PatchCollection(paths, edgecolors='green', facecolors=['white'], linewidths=0.1)
+    collection = clt.PatchCollection(
+        paths, edgecolors="green", facecolors=["white"], linewidths=0.1
+    )
     ax.add_collection(collection)
 
     def animation_func(idx):
@@ -87,9 +88,9 @@ if __name__ == "__main__":
         for column_idx in range(n_columns):
             for row_idx in range(n_rows):
                 cell = state[row_idx, column_idx]
-                if cell == 'x':
+                if cell == "x":
                     facecolor = "black"
-                elif cell == 'o':
+                elif cell == "o":
                     facecolor = "white"
                 else:
                     facecolor = "grey"
