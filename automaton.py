@@ -1,19 +1,9 @@
 import numpy as np
-
 from enum import Enum
 
 
-class Cell(Enum):
-    """Cells can be of two types."""
-
-    ALIVE = 1
-    DEAD = 0
-    WALL = -1
-
 class Rule2DBlock:
     """Base class for 2D block rules."""
-
-    NAME = ""
 
     def apply_block(self, block):
         """Apply rule to a single quad."""
@@ -71,107 +61,105 @@ class State2D:
 class RuleSimulation(Rule2DBlock):
     """Implementation of Gas simulation."""
 
-    NAME = "Rule Gas"
-
     RULES = [
         ### collision rules
         (np.array([
-            [Cell.ALIVE, Cell.DEAD], 
-            [Cell.DEAD,  Cell.DEAD]
+            ['x', 'o'], 
+            ['o', 'o']
         ]),
         np.array([
-            [Cell.DEAD, Cell.DEAD], 
-            [Cell.DEAD, Cell.ALIVE]
+            ['o', 'o'], 
+            ['o', 'x']
         ])),
         ###
         (np.array([
-            [Cell.DEAD,  Cell.DEAD], 
-            [Cell.ALIVE, Cell.DEAD]
+            ['o', 'o'], 
+            ['x', 'o']
         ]),
         np.array([
-            [Cell.DEAD,  Cell.ALIVE], 
-            [Cell.DEAD,  Cell.DEAD]
+            ['o', 'x'], 
+            ['o', 'o']
         ])),
         ###
         (np.array([
-            [Cell.DEAD,  Cell.DEAD], 
-            [Cell.ALIVE, Cell.ALIVE]
+            ['o', 'o'], 
+            ['x', 'x']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.ALIVE], 
-            [Cell.DEAD,  Cell.DEAD]
+            ['x', 'x'], 
+            ['o', 'o']
         ])),
         ###
         (np.array([
-            [Cell.DEAD, Cell.ALIVE], 
-            [Cell.DEAD, Cell.ALIVE]
+            ['o', 'x'], 
+            ['o', 'x']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.DEAD], 
-            [Cell.ALIVE, Cell.DEAD]
+            ['x', 'o'], 
+            ['x', 'o']
         ])),
         ###
         (np.array([
-            [Cell.DEAD,  Cell.ALIVE], 
-            [Cell.ALIVE, Cell.DEAD]
+            ['o', 'x'], 
+            ['x', 'o']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.DEAD], 
-            [Cell.DEAD,  Cell.ALIVE]
+            ['x', 'o'], 
+            ['o', 'x']
         ])),
         ###
         (np.array([
-            [Cell.DEAD,  Cell.ALIVE], 
-            [Cell.ALIVE, Cell.ALIVE]
+            ['o', 'x'], 
+            ['x', 'x']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.ALIVE], 
-            [Cell.ALIVE, Cell.DEAD]
+            ['x', 'x'], 
+            ['x', 'o']
         ])),
         ###
         (np.array([
-            [Cell.ALIVE, Cell.ALIVE], 
-            [Cell.DEAD,  Cell.ALIVE]
+            ['x', 'x'], 
+            ['o', 'x']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.DEAD], 
-            [Cell.ALIVE, Cell.ALIVE]
+            ['x', 'o'], 
+            ['x', 'x']
         ])),
         ### wall rules
         (np.array([
-            [Cell.DEAD, Cell.ALIVE], 
-            [Cell.WALL, Cell.WALL]
+            ['o', 'x'], 
+            ['w', 'w']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.DEAD], 
-            [Cell.WALL,  Cell.WALL]
+            ['x', 'o'], 
+            ['w', 'w']
         ])),
         ###
         (np.array([
-            [Cell.WALL, Cell.ALIVE], 
-            [Cell.WALL, Cell.DEAD]
+            ['w', 'x'], 
+            ['w', 'o']
         ]),
         np.array([
-            [Cell.WALL, Cell.DEAD], 
-            [Cell.WALL, Cell.ALIVE]
+            ['w', 'o'], 
+            ['w', 'x']
         ])),
         ###
         (np.array([
-            [Cell.WALL,  Cell.WALL], 
-            [Cell.ALIVE, Cell.DEAD]
+            ['w', 'w'], 
+            ['x', 'o']
         ]),
         np.array([
-            [Cell.WALL, Cell.WALL], 
-            [Cell.DEAD, Cell.ALIVE]
+            ['w', 'w'], 
+            ['o', 'x']
         ])),
         ###
         (np.array([
-            [Cell.DEAD,  Cell.WALL], 
-            [Cell.ALIVE, Cell.WALL]
+            ['o', 'w'], 
+            ['x', 'w']
         ]),
         np.array([
-            [Cell.ALIVE, Cell.WALL], 
-            [Cell.DEAD,  Cell.WALL]
+            ['x', 'w'], 
+            ['o', 'w']
         ])),
     ]
 
@@ -183,3 +171,11 @@ class RuleSimulation(Rule2DBlock):
             if np.array_equal(block, rule[1]):
                 return rule[0]
         return block
+
+
+def apply_rule(state, idx):
+    """Given state, compute next one."""
+    s = State2D(state)
+    rule = RuleSimulation()
+    return rule.apply(s, idx).data
+    

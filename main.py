@@ -6,9 +6,7 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 import time
 
-from automaton import Cell
-from automaton import State2D
-from automaton import RuleSimulation
+from automaton import apply_rule
 
 
 if __name__ == "__main__":
@@ -16,101 +14,38 @@ if __name__ == "__main__":
 
 
     initial_pattern_str = """
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooooooooooooow
-        woooooxooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooxooooooooooooxoooooooooooooooooooooow
-        wooooooooooooooooooooxoooxoooooooooooooooooooooooooooooooooxooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooxoooooooooooooooxooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooxooooooooooooooxooooooooooooooooooooooooxooooooxoooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooooooow
-        woooooooooooooooooooooooooooooxoooooooooooooxoooooooooooooooooooooooooow
-        woooooooooooooooooooooxooooooooooooooooooooooooooooooxooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooxoooooooooooxooooooooooooooooooooooooxoooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooow
-        wooooooooooooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooxoooooooxoooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooxooooooooooooxooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooxooooooooooooooxooooooooxooooooooooooooooooooow
-        wooooooooooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooooow
-        woooooooxooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooxooooooooxoooooooooxooooooooxoooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooxoooooooooooooooxooooooooooooooooooooxoooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooxoooooooooooooooooooooooooooooooooxooooooooooooooow
-        wooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooxooooooooooooooooxooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooooooow
-        woooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooxooooooooooooooooooooxooooooooxooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooxoooooooooooooooooooooooxooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooxoooooooooooooooxooooooooooooooooooow
-        woooooooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooxooooxoooooooooooooooooxooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooxoooooooooooooooooooooooooooxooooooooooxooooooooooooooooooow
-        woooooooooooooooooooooooxooooooooooooooooooooooooooooooooooxooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooxooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooxooooooooooooooooooooooooooxoooooxooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooooooooooooxoooooooooooooooooooooooooooooooooxooooooooooooooow
-        woooooooooooooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooxooooooooooooooooooooooxooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooooooooooow
-        wooooooooooooooooooooooooooooooooooooooooooooooooooooxooooooooooooooooow
-        woooooooooooxoooooooooooooooooxoooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooxooooooooooooooooooooooooxooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+        wooxooooooooxoooooooooooooooooooow
+        woooooxooooxooxooooxoooooooooxooow
+        wooooooooxoooooxoxooooxoooooooooow
+        woooooxoooooxooooooxooooooooooooow
+        wooxooxooooxoooxoooooooooooooxooow
+        woooooxooxoooooooooxooxoooooooooow
+        wooxoooooooxoooxooooooooooooooooow
+        woooxooooxoooxooooooxooooooooxooow
+        woooooxoooooooooxoooooooooooooooow
+        wooxoooooooxooooooooooooooooooooow
+        woooooooooooooooooooooooooooxoooow
+        wooooooooooxooooooooooooooooooooow
+        woooxoooooooooooooooooooooxoooooow
+        woooooooxoooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooow
+        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
     """
 
     initial_pattern = []
     for row in initial_pattern_str.split('\n'):
         rowvals = []
         for letter in row.strip():
-            if letter == 'w':
-                rowvals.append(Cell.WALL)
-            if letter == 'o':
-                rowvals.append(Cell.DEAD)
-            if letter == 'x':
-                rowvals.append(Cell.ALIVE)
+            rowvals.append(letter)
         if rowvals:
             initial_pattern.append(rowvals)
-    initial_pattern = np.array(initial_pattern, dtype=Cell)
 
-    state = State2D(initial_pattern)
-    rule = RuleSimulation()
+    state = np.array(initial_pattern)
 
-    n_rows = state.data.shape[0]
-    n_columns = state.data.shape[1]
+    n_rows = state.shape[0]
+    n_columns = state.shape[1]
 
     # Create a tickless figure
     fig, ax = plt.subplots()
@@ -130,7 +65,7 @@ if __name__ == "__main__":
                 1,
             )
             paths.append(rect)
-    collection = clt.PatchCollection(paths, edgecolors='black', facecolors=['white'], linewidths=0.1)
+    collection = clt.PatchCollection(paths, edgecolors='green', facecolors=['white'], linewidths=0.1)
     ax.add_collection(collection)
 
     def animation_func(idx):
@@ -143,7 +78,7 @@ if __name__ == "__main__":
         global state
 
         # And update it via the automaton rule.
-        state = rule.apply(state, idx)
+        state = apply_rule(state, idx)
 
         middlepoint = time.time()
 
@@ -151,10 +86,10 @@ if __name__ == "__main__":
         colors = []
         for column_idx in range(n_columns):
             for row_idx in range(n_rows):
-                cell = state.data[row_idx, column_idx]
-                if cell == Cell.ALIVE:
+                cell = state[row_idx, column_idx]
+                if cell == 'x':
                     facecolor = "black"
-                elif cell == Cell.DEAD:
+                elif cell == 'o':
                     facecolor = "white"
                 else:
                     facecolor = "grey"
