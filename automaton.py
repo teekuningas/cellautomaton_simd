@@ -4,62 +4,62 @@ import numpy as np
 def match_pattern(tl, tr, bl, br):
     """Helper to match patterns."""
     ###
-    if np.array_equal([tl, tr, bl, br], ['x', 'o', 'o', 'o']):
-        return np.array(['o', 'o','o', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['o', 'o', 'o', 'x']):
-        return np.array(['x', 'o','o', 'o'])
+    if [tl, tr, bl, br] == ["x", "o", "o", "o"]:
+        return ["o", "o", "o", "x"]
+    if [tl, tr, bl, br] == ["o", "o", "o", "x"]:
+        return ["x", "o", "o", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['o', 'o', 'x', 'o']):
-        return np.array(['o', 'x','o', 'o'])
-    if np.array_equal([tl, tr, bl, br], ['o', 'x', 'o', 'o']):
-        return np.array(['o', 'o','x', 'o'])
+    if [tl, tr, bl, br] == ["o", "o", "x", "o"]:
+        return ["o", "x", "o", "o"]
+    if [tl, tr, bl, br] == ["o", "x", "o", "o"]:
+        return ["o", "o", "x", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['x', 'x', 'o', 'o']):
-        return np.array(['o', 'o','x', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['o', 'o', 'x', 'x']):
-        return np.array(['x', 'x','o', 'o'])
+    if [tl, tr, bl, br] == ["x", "x", "o", "o"]:
+        return ["o", "o", "x", "x"]
+    if [tl, tr, bl, br] == ["o", "o", "x", "x"]:
+        return ["x", "x", "o", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['o', 'x', 'o', 'x']):
-        return np.array(['x', 'o','x', 'o'])
-    if np.array_equal([tl, tr, bl, br], ['x', 'o', 'x', 'o']):
-        return np.array(['o', 'x','o', 'x'])
+    if [tl, tr, bl, br] == ["o", "x", "o", "x"]:
+        return ["x", "o", "x", "o"]
+    if [tl, tr, bl, br] == ["x", "o", "x", "o"]:
+        return ["o", "x", "o", "x"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['o', 'x', 'x', 'o']):
-        return np.array(['x', 'o','o', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['x', 'o', 'o', 'x']):
-        return np.array(['o', 'x','x', 'o'])
+    if [tl, tr, bl, br] == ["o", "x", "x", "o"]:
+        return ["x", "o", "o", "x"]
+    if [tl, tr, bl, br] == ["x", "o", "o", "x"]:
+        return ["o", "x", "x", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['x', 'x', 'x', 'o']):
-        return np.array(['o', 'x','x', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['o', 'x', 'x', 'x']):
-        return np.array(['x', 'x','x', 'o'])
+    if [tl, tr, bl, br] == ["x", "x", "x", "o"]:
+        return ["o", "x", "x", "x"]
+    if [tl, tr, bl, br] == ["o", "x", "x", "x"]:
+        return ["x", "x", "x", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['x', 'o', 'x', 'x']):
-        return np.array(['x', 'x','o', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['x', 'x', 'o', 'x']):
-        return np.array(['x', 'o','x', 'x'])
+    if [tl, tr, bl, br] == ["x", "o", "x", "x"]:
+        return ["x", "x", "o", "x"]
+    if [tl, tr, bl, br] == ["x", "x", "o", "x"]:
+        return ["x", "o", "x", "x"]
     ### wall rules
-    if np.array_equal([tl, tr, bl, br], ['o', 'x', 'w', 'w']):
-        return np.array(['x', 'o','w', 'w'])
-    if np.array_equal([tl, tr, bl, br], ['x', 'o', 'w', 'w']):
-        return np.array(['o', 'x','w', 'w'])
+    if [tl, tr, bl, br] == ["o", "x", "w", "w"]:
+        return ["x", "o", "w", "w"]
+    if [tl, tr, bl, br] == ["x", "o", "w", "w"]:
+        return ["o", "x", "w", "w"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['w', 'x', 'w', 'o']):
-        return np.array(['w', 'o','w', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['w', 'o', 'w', 'x']):
-        return np.array(['w', 'x','w', 'o'])
+    if [tl, tr, bl, br] == ["w", "x", "w", "o"]:
+        return ["w", "o", "w", "x"]
+    if [tl, tr, bl, br] == ["w", "o", "w", "x"]:
+        return ["w", "x", "w", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['w', 'w', 'x', 'o']):
-        return np.array(['w', 'w','o', 'x'])
-    if np.array_equal([tl, tr, bl, br], ['w', 'w', 'o', 'x']):
-        return np.array(['w', 'w','x', 'o'])
+    if [tl, tr, bl, br] == ["w", "w", "x", "o"]:
+        return ["w", "w", "o", "x"]
+    if [tl, tr, bl, br] == ["w", "w", "o", "x"]:
+        return ["w", "w", "x", "o"]
     ###
-    if np.array_equal([tl, tr, bl, br], ['x', 'w', 'o', 'w']):
-        return np.array(['o', 'w','x', 'w'])
-    if np.array_equal([tl, tr, bl, br], ['o', 'w', 'x', 'w']):
-        return np.array(['x', 'w','o', 'w'])
+    if [tl, tr, bl, br] == ["x", "w", "o", "w"]:
+        return ["o", "w", "x", "w"]
+    if [tl, tr, bl, br] == ["o", "w", "x", "w"]:
+        return ["x", "w", "o", "w"]
 
-    return np.array([tl, tr, bl, br])
+    return [tl, tr, bl, br]
 
 
 def apply_rule(state, idx):
@@ -89,12 +89,12 @@ def apply_rule(state, idx):
 
     # then replace the contents that can change
     i = 0
-    while (i < block_count_rows):
+    while i < block_count_rows:
         j = 0
-        while (j < block_count_columns):
+        while j < block_count_columns:
             # implement c-like replace system
-            idx_11_i = i*2 + start_idx
-            idx_11_j = j*2 + start_idx
+            idx_11_i = i * 2 + start_idx
+            idx_11_j = j * 2 + start_idx
             idx_21_i = idx_11_i + 1
             idx_21_j = idx_11_j
             idx_12_i = idx_11_i
