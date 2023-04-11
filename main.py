@@ -13,24 +13,56 @@ if __name__ == "__main__":
     """Run as a script."""
 
     initial_pattern_str = """
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-        wooxooooooooxoooooooooooooooooooow
-        woooooxooooxooxooooxoooooooooxooow
-        wooooooooxoooooxoxooooxoooooooooow
-        woooooxoooooxooooooxooooooooooooow
-        wooxooxooooxoooxoooooooooooooxooow
-        woooooxooxoooooooooxooxoooooooooow
-        wooxoooooooxoooxooooooooooooooooow
-        woooxooooxoooxooooooxooooooooxooow
-        woooooxoooooooooxoooooooooooooooow
-        wooxoooooooxooooooooooooooooooooow
-        woooooooooooooooooooooooooooxoooow
-        wooooooooooxooooooooooooooooooooow
-        woooxoooooooooooooooooooooxoooooow
-        woooooooxoooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooow
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+        wooxooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooxooooxooxooooxoooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        wooooooooxoooooxoxooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooxoooooxooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        wooxooxooooxoooxoooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooxooxoooooooooxooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        wooxoooooooxoooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooxooooxoooxooooooxooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooxoooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        wooxoooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        wooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooxoooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
+        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
     """
 
     initial_pattern = []
@@ -103,5 +135,5 @@ if __name__ == "__main__":
         print(f"Computation: {times[0]}, plotting: {times[1]}")
 
     # Let matplotlib do the real work
-    ani = FuncAnimation(fig, animation_func, frames=1000, interval=0, blit=False)
+    ani = FuncAnimation(fig, animation_func, frames=10000, interval=100, blit=False)
     plt.show()
