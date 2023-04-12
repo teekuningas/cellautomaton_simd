@@ -6,14 +6,22 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 import time
 
-from automaton import apply_rule
+from py_automaton import apply_rule
+
+from ctypes import CDLL
+from ctypes import c_char_p
+c_automaton = CDLL("./automaton.so")
+c_automaton.apply_rule.restype = c_char_p
 
 
 def update(state, idx):
-    return np.reshape(
-        apply_rule(list(state.flatten()), state.shape[1], idx),
-        state.shape
-    )
+    result = c_automaton.apply_rule(idx).decode('utf-8')
+    return state
+
+    # return np.reshape(
+    #     apply_rule(list(state.flatten()), state.shape[1], idx),
+    #     state.shape
+    # )
 
 
 if __name__ == "__main__":
