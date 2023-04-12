@@ -1,8 +1,8 @@
 shell:
 	nix develop
 
-build:
+build: automaton.c
 	cc -fPIC -shared -o automaton.so automaton.c
 
-start:
+start: build
 	python3 main.py

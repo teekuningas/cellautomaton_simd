@@ -15,7 +15,12 @@ c_automaton.apply_rule.restype = c_char_p
 
 
 def update(state, idx):
-    result = c_automaton.apply_rule(idx).decode('utf-8')
+    result = c_automaton.apply_rule(
+        "kissa".encode('utf-8'),
+        state.shape[1],
+        idx
+    ).decode('utf-8')
+    import pdb; pdb.set_trace()
     return state
 
     # return np.reshape(
