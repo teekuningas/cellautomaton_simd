@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def match_pattern(tl, tr, bl, br):
     """Helper to match patterns."""
     ###
@@ -62,11 +59,10 @@ def match_pattern(tl, tr, bl, br):
     return [tl, tr, bl, br]
 
 
-def apply_rule(state, idx):
+def apply_rule(state, n_columns, idx):
     """Given state, compute next one."""
 
-    n_rows = state.shape[0]
-    n_columns = state.shape[1]
+    n_rows = len(state) / n_columns
 
     if n_rows % 2 != 0:
         raise Exception("Height should be divisible by 2")
@@ -85,7 +81,7 @@ def apply_rule(state, idx):
         block_count_rows = int((n_rows / 2 - 1))
 
     # copy previous state as the base
-    new_state = np.copy(state)
+    new_state = state.copy()
 
     # then replace the contents that can change
     i = 0
@@ -95,21 +91,25 @@ def apply_rule(state, idx):
             # implement c-like replace system
             idx_11_i = i * 2 + start_idx
             idx_11_j = j * 2 + start_idx
+            idx_11 = n_columns*(idx_11_i) + idx_11_j
             idx_21_i = idx_11_i + 1
             idx_21_j = idx_11_j
+            idx_21 = n_columns*(idx_21_i) + idx_21_j
             idx_12_i = idx_11_i
             idx_12_j = idx_11_j + 1
+            idx_12 = n_columns*(idx_12_i) + idx_12_j
             idx_22_i = idx_11_i + 1
             idx_22_j = idx_11_j + 1
-            tl = state[idx_11_i, idx_11_j]
-            bl = state[idx_21_i, idx_21_j]
-            tr = state[idx_12_i, idx_12_j]
-            br = state[idx_22_i, idx_22_j]
+            idx_22 = n_columns*(idx_22_i) + idx_22_j
+            tl = state[idx_11]
+            bl = state[idx_21]
+            tr = state[idx_12]
+            br = state[idx_22]
             new_tl, new_tr, new_bl, new_br = match_pattern(tl, tr, bl, br)
-            new_state[idx_11_i, idx_11_j] = new_tl
-            new_state[idx_21_i, idx_21_j] = new_bl
-            new_state[idx_12_i, idx_12_j] = new_tr
-            new_state[idx_22_i, idx_22_j] = new_br
+            new_state[idx_11] = new_tl
+            new_state[idx_21] = new_bl
+            new_state[idx_12] = new_tr
+            new_state[idx_22] = new_br
             j += 1
         i += 1
 

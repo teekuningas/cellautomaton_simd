@@ -9,6 +9,13 @@ import time
 from automaton import apply_rule
 
 
+def update(state, idx):
+    return np.reshape(
+        apply_rule(list(state.flatten()), state.shape[1], idx),
+        state.shape
+    )
+
+
 if __name__ == "__main__":
     """Run as a script."""
 
@@ -111,7 +118,7 @@ if __name__ == "__main__":
         global state
 
         # And update it via the automaton rule.
-        state = apply_rule(state, idx)
+        state = update(state, idx)
 
         middlepoint = time.time()
 
@@ -135,5 +142,5 @@ if __name__ == "__main__":
         print(f"Computation: {times[0]}, plotting: {times[1]}")
 
     # Let matplotlib do the real work
-    ani = FuncAnimation(fig, animation_func, frames=10000, interval=100, blit=False)
+    ani = FuncAnimation(fig, animation_func, frames=10000, interval=50, blit=False)
     plt.show()
