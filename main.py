@@ -4,6 +4,7 @@ import matplotlib.collections as clt
 from matplotlib.animation import FuncAnimation
 
 import numpy as np
+import random
 import time
 
 from py_automaton import apply_rule
@@ -53,68 +54,20 @@ def update_py(state, idx):
 if __name__ == "__main__":
     """Run as a script."""
 
-    initial_pattern_str = """
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-        wooxooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooxooooxooxooooxoooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooxoooooxoxooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooxoooooxooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooxooxooooxoooxoooooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooxooxoooooooooxooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooxoooooooxoooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooxooooxoooxooooooxooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooxoooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooxoooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wooooooooooxooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooxoooooooooooooooooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooxoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        woooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooow
-        wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-    """
-
-    initial_pattern = []
-    for row in initial_pattern_str.split("\n"):
-        rowvals = []
-        for letter in row.strip():
-            rowvals.append(letter)
-        if rowvals:
-            initial_pattern.append(rowvals)
-
-    state = np.array(initial_pattern)
+    # Get a random initial pattern
+    width = 100
+    height = 80
+    initial_pattern = np.empty((height, width), dtype=str)
+    for i in range(height):
+        for j in range(width):
+            if i == 0 or j == 0 or i == height - 1 or j == width - 1:
+                initial_pattern[i, j] = 'w'
+                continue
+            if random.random() > 0.1:
+                initial_pattern[i, j] = 'o'
+            else:
+                initial_pattern[i, j] = 'x'
+    state = initial_pattern
 
     n_rows = state.shape[0]
     n_columns = state.shape[1]
@@ -138,7 +91,7 @@ if __name__ == "__main__":
             )
             paths.append(rect)
     collection = clt.PatchCollection(
-        paths, edgecolors="green", facecolors=["white"], linewidths=0.1
+        paths, edgecolors="green", facecolors=["white"], linewidths=0.01
     )
     ax.add_collection(collection)
 
@@ -152,7 +105,12 @@ if __name__ == "__main__":
         global state
 
         # And update it via the automaton rule.
+
+        # c version
         state = update(state, idx)
+
+        # # python version a bit slower
+        # state = update_py(state, idx)
 
         middlepoint = time.time()
 
@@ -176,5 +134,5 @@ if __name__ == "__main__":
         print(f"Computation: {times[0]}, plotting: {times[1]}")
 
     # Let matplotlib do the real work
-    ani = FuncAnimation(fig, animation_func, frames=10000, interval=50, blit=False)
+    ani = FuncAnimation(fig, animation_func, frames=10000, interval=80, blit=False)
     plt.show()
