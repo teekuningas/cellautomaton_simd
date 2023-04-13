@@ -8,25 +8,46 @@ import time
 
 from py_automaton import apply_rule
 
-from ctypes import CDLL
-from ctypes import c_char_p
-c_automaton = CDLL("./automaton.so")
-c_automaton.apply_rule.restype = c_char_p
+import ctypes
+
+# prepare c-side `apply_rule` function for use
+c_automaton = ctypes.CDLL("./automaton.so")
+c_automaton.apply_rule.restype = ctypes.c_int
+c_automaton.apply_rule.argtypes = (
+    ctypes.c_char_p,
+    ctypes.c_int,
+    ctypes.c_int,
+    ctypes.c_char_p,
+)
 
 
 def update(state, idx):
-    result = c_automaton.apply_rule(
-        "kissa".encode('utf-8'),
-        state.shape[1],
-        idx
-    ).decode('utf-8')
-    import pdb; pdb.set_trace()
-    return state
+    """Calls c-side function to update state"""
 
-    # return np.reshape(
-    #     apply_rule(list(state.flatten()), state.shape[1], idx),
-    #     state.shape
-    # )
+    # to prepare for c, convert
+    # numpy array to string
+    n_columns = state.shape[1]
+    flattened = "".join(state.flatten())
+
+    # allocate memory for out variable in python side so that it gets
+    # automatically gc'd by python
+    out = ctypes.create_string_buffer(len(flattened) + 1)
+
+    # call the C function
+    ret = c_automaton.apply_rule(flattened.encode("utf-8"), n_columns, idx, out)
+    if ret != 0:
+        raise Exception("Something went wrong in the c side")
+
+    # return a nice little numpy array
+    return np.reshape(list(out.value.decode("utf-8")), state.shape)
+
+
+def update_py(state, idx):
+    """Calls python-side function to update state"""
+
+    return np.reshape(
+        apply_rule(list(state.flatten()), state.shape[1], idx), state.shape
+    )
 
 
 if __name__ == "__main__":

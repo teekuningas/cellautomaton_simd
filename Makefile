@@ -6,3 +6,7 @@ build: automaton.c
 
 start: build
 	python3 main.py
+
+format:
+	black *.py
+	nix fmt flake.nix

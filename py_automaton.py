@@ -91,16 +91,16 @@ def apply_rule(state, n_columns, idx):
             # implement c-like replace system
             idx_11_i = i * 2 + start_idx
             idx_11_j = j * 2 + start_idx
-            idx_11 = n_columns*(idx_11_i) + idx_11_j
+            idx_11 = n_columns * (idx_11_i) + idx_11_j
             idx_21_i = idx_11_i + 1
             idx_21_j = idx_11_j
-            idx_21 = n_columns*(idx_21_i) + idx_21_j
+            idx_21 = n_columns * (idx_21_i) + idx_21_j
             idx_12_i = idx_11_i
             idx_12_j = idx_11_j + 1
-            idx_12 = n_columns*(idx_12_i) + idx_12_j
+            idx_12 = n_columns * (idx_12_i) + idx_12_j
             idx_22_i = idx_11_i + 1
             idx_22_j = idx_11_j + 1
-            idx_22 = n_columns*(idx_22_i) + idx_22_j
+            idx_22 = n_columns * (idx_22_i) + idx_22_j
             tl = state[idx_11]
             bl = state[idx_21]
             tr = state[idx_12]
