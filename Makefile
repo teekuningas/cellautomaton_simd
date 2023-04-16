@@ -1,12 +1,26 @@
+.PHONY: shell
 shell:
 	nix develop
+	
+.PHONY: build
+start: build_block
 
-build: automaton.c
-	gcc -O3 -fPIC -shared -o automaton.so automaton.c
+.PHONY: start
+start: start_block
 
-start: build
-	python3 main.py
+.PHONY: build_block
+build_block: block_automaton_c.c
+	gcc -O3 -fPIC -shared -o block_automaton_c.so block_automaton_c.c
 
+.PHONY: start_block
+start_block: build_block
+	python3 block_main.py
+
+.PHONY: start_diff
+start_diff:
+	python3 diff_main.py
+
+.PHONY: format
 format:
 	black *.py
 	nix fmt flake.nix

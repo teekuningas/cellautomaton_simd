@@ -7,12 +7,12 @@ import numpy as np
 import random
 import time
 
-from py_automaton import apply_rule
+from block_automaton_py import apply_rule
 
 import ctypes
 
 # prepare c-side `apply_rule` function for use
-c_automaton = ctypes.CDLL("./automaton.so")
+c_automaton = ctypes.CDLL("./block_automaton_c.so")
 c_automaton.apply_rule.restype = ctypes.c_int
 c_automaton.apply_rule.argtypes = (
     ctypes.c_char_p,
@@ -61,12 +61,12 @@ if __name__ == "__main__":
     for i in range(height):
         for j in range(width):
             if i == 0 or j == 0 or i == height - 1 or j == width - 1:
-                initial_pattern[i, j] = 'w'
+                initial_pattern[i, j] = "w"
                 continue
             if random.random() > 0.1:
-                initial_pattern[i, j] = 'o'
+                initial_pattern[i, j] = "o"
             else:
-                initial_pattern[i, j] = 'x'
+                initial_pattern[i, j] = "x"
     state = initial_pattern
 
     n_rows = state.shape[0]
