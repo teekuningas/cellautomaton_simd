@@ -17,12 +17,34 @@ def update_py(state):
     return np.reshape(apply_rule(list(state.flatten()), state.shape[1]), state.shape)
 
 
+def finite_difference(state):
+    """Computes finite difference dx, dy for every cell"""
+    di = np.empty(state.shape)
+    dj = np.empty(state.shape)
+    for i in range(state.shape[0]):
+        for j in range(state.shape[1]):
+            if i == 0:
+                di[i, j] = state[i + 1, j] - state[i, j]
+            elif i == state.shape[0] - 1:
+                di[i, j] = state[i, j] - state[i - 1, j]
+            else:
+                di[i, j] = (state[i + 1, j] - state[i - 1, j]) / 2
+
+            if j == 0:
+                dj[i, j] = state[i, j + 1] - state[i, j]
+            elif j == state.shape[1] - 1:
+                dj[i, j] = state[i, j] - state[i, j - 1]
+            else:
+                dj[i, j] = (state[i, j + 1] - state[i, j - 1]) / 2
+    return di, dj
+
+
 if __name__ == "__main__":
     """Run as a script."""
 
     # Get a random initial pattern
-    width = 50
-    height = 30
+    width = 30
+    height = 20
     initial_pattern = np.empty((height, width), dtype=float)
     for i in range(height):
         for j in range(width):
@@ -40,7 +62,7 @@ if __name__ == "__main__":
     ax.set_xlim([0 - 0.5, n_columns + 0.5])
     ax.set_ylim([0 - 0.5, n_rows + 0.5])
 
-    # create a initial configuration of cells in a PatchCollection for superfast plotting
+    # create a initial configuration of cells in a PatchCollection for faster plotting
     paths = []
     for column_idx in range(n_columns):
         for row_idx in range(n_rows):
@@ -50,13 +72,32 @@ if __name__ == "__main__":
                 1,
             )
             paths.append(rect)
-    collection = clt.PatchCollection(
+    face_collection = clt.PatchCollection(
         paths, edgecolors="green", facecolors=["white"], linewidths=0.01
     )
-    ax.add_collection(collection)
+    ax.add_collection(face_collection)
+
+    # create a initial configuration of wind arrows
+    arrows = []
+    for column_idx in range(n_columns):
+        for row_idx in range(n_rows):
+            arrow = patches.Arrow(
+                column_idx + 0.5,
+                n_rows - row_idx - 0.5,
+                random.random() - 0.5,
+                random.random() - 0.5,
+                width=0.3,
+            )
+            arrows.append(arrow)
+    arrow_collection = clt.PatchCollection(
+        arrows,
+        color="blue",
+    )
+    ax.add_collection(arrow_collection)
 
     clrmap = mpl.colormaps["Greys"]
 
+    # "main loop"
     def animation_func(idx):
         """Helper to update a single frame."""
 
@@ -82,6 +123,9 @@ if __name__ == "__main__":
         energy_after = np.sum(state)
         state = state * (energy_before / energy_after)
 
+        # compute derivative
+        di, dj = finite_difference(state)
+
         # physics simulation finished time
         physics_time = time.time()
 
@@ -90,13 +134,31 @@ if __name__ == "__main__":
         for column_idx in range(n_columns):
             for row_idx in range(n_rows):
                 cell = state[row_idx, column_idx]
-
-                # choose color
                 facecolor = clrmap(1 - cell)
-
                 colors.append(facecolor)
-        # And only update them
-        collection.set_facecolors(colors)
+
+        # And update them
+        face_collection.set_facecolors(colors)
+
+        # Update the wind arrows
+        global arrow_collection
+        arrow_collection.remove()
+        arrows = []
+        for column_idx in range(n_columns):
+            for row_idx in range(n_rows):
+                arrow = patches.Arrow(
+                    column_idx + 0.5,
+                    n_rows - row_idx - 0.5,
+                    -(dj[row_idx, column_idx] * 10),
+                    (di[row_idx, column_idx] * 10),
+                    width=0.3,
+                )
+                arrows.append(arrow)
+        arrow_collection = clt.PatchCollection(
+            arrows,
+            color="blue",
+        )
+        ax.add_collection(arrow_collection)
 
         # timing information
         times = [
@@ -107,5 +169,5 @@ if __name__ == "__main__":
         print(f"Computation: {times[0]}, physics: {times[1]}, plotting: {times[2]}")
 
     # Let matplotlib do the real work
-    ani = FuncAnimation(fig, animation_func, frames=10000, interval=80, blit=False)
+    ani = FuncAnimation(fig, animation_func, frames=10000, interval=200, blit=False)
     plt.show()
