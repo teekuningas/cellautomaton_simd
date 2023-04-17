@@ -20,6 +20,11 @@ start_block: build_block
 start_diff:
 	python3 diff_main.py
 
+.PHONY: start_wind
+start_wind:
+	python3 wind_main.py
+
+
 .PHONY: format
 format:
 	black *.py
