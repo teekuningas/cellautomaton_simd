@@ -95,8 +95,6 @@ if __name__ == "__main__":
     )
     ax.add_collection(arrow_collection)
 
-    clrmap = mpl.colormaps["Greys"]
-
     # "main loop"
     def animation_func(idx):
         """Helper to update a single frame."""
@@ -134,11 +132,14 @@ if __name__ == "__main__":
         for column_idx in range(n_columns):
             for row_idx in range(n_rows):
                 cell = state[row_idx, column_idx]
-                facecolor = clrmap(1 - cell)
-                colors.append(facecolor)
+                colors.append(str(min(1, cell)))
+
+        color_time = time.time()
 
         # And update them
         face_collection.set_facecolors(colors)
+
+        face_time = time.time()
 
         # Update the wind arrows
         global arrow_collection
@@ -160,13 +161,19 @@ if __name__ == "__main__":
         )
         ax.add_collection(arrow_collection)
 
+        wind_time = time.time()
+
         # timing information
         times = [
             comp_time - beginning,
             physics_time - comp_time,
-            time.time() - physics_time,
+            color_time - physics_time,
+            face_time - color_time,
+            wind_time - face_time,
         ]
-        print(f"Computation: {times[0]}, physics: {times[1]}, plotting: {times[2]}")
+        print(
+            f"Computation: {times[0]}, physics: {times[1]}, color: {times[2]}, face: {times[3]}, wind: {times[4]}"
+        )
 
     # Let matplotlib do the real work
     ani = FuncAnimation(fig, animation_func, frames=10000, interval=200, blit=False)
