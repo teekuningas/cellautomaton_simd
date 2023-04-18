@@ -30,8 +30,8 @@ if __name__ == "__main__":
     sphere_radius = 10
     cell_radius = 1.0
 
-    density = np.random.random((n_layers, n_cells))
-    energy = np.ones((n_layers, n_cells)) * 0.25
+    density = np.random.random((n_layers, n_cells)) * 2
+    energy = np.ones((n_layers, n_cells)) * 0.5
 
     # Create a tickless figure
     fig, (ax_density, ax_energy) = plt.subplots(ncols=2)
@@ -125,36 +125,46 @@ if __name__ == "__main__":
         global energy
         global density
 
-        # Update density
+        # Update density by diffusion
         density = update_py(density, np.ones(density.shape))
 
-        # Update energy
-        energy = update_py(energy, density)
+        # Update energy by diffusion
+        energy = update_py(energy, np.ones(energy.shape))
 
-        # simulate physics
-        energy_before = np.sum(energy)
+        # simulate sun by adding energy to some cells
         for j in range(n_cells // 4 - 2, n_cells // 4 + 2):
-            energy[0, j] = 0.5 * random.random() + 0.5
-        energy = energy * (energy_before / np.sum(energy))
+            energy[0, j] = 10 * random.random() + 1
+
+        # for balance, allow energy to escape
+        energy[-1, :] = energy[-1, :] * 0.99
 
         # Simulate gravity
-        density_before = np.sum(density)
         for i in range(n_layers - 1):
             for j in range(n_cells):
-                change = (
-                    (1 / density[i, j]) * density[i + 1, j] * 0.2 * (0.5 - energy[i, j])
-                )
-                density[i, j] = density[i, j] + change
-                density[i + 1, j] = density[i + 1, j] - change
-        density = density * (density_before / np.sum(density))
+
+                # TODO: Improve this
+                change = energy[i, j] * energy[i + 1, j] * 0.1
+
+                sum_before = density[i, j] + density[i + 1, j]
+
+                density[i, j] = density[i, j] / change
+                density[i + 1, j] = density[i + 1, j] * change
+
+                sum_after = density[i, j] + density[i + 1, j]
+
+                # ensure that the change is conserving energy
+                density[i, j] = density[i, j] * (sum_before / sum_after)
+                density[i + 1, j] = density[i + 1, j] * (sum_before / sum_after)
 
         # Draw colors
         density_colors = []
         energy_colors = []
         for layer_idx in range(n_layers):
             for cell_idx in range(n_cells):
-                density_colors.append(str(min(1, max(0, density[layer_idx, cell_idx]))))
-                energy_colors.append(str(min(1, max(0, energy[layer_idx, cell_idx]))))
+                dcell = density[layer_idx, cell_idx]
+                ecell = energy[layer_idx, cell_idx]
+                density_colors.append(str(dcell / (1 + dcell)))
+                energy_colors.append(str(ecell / (1 + ecell)))
         # And update them
         density_face_collection.set_facecolors(density_colors)
         energy_face_collection.set_facecolors(energy_colors)
