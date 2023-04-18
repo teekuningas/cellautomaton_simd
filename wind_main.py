@@ -31,7 +31,7 @@ if __name__ == "__main__":
     cell_radius = 1.0
 
     density = np.random.random((n_layers, n_cells)) * 2
-    energy = np.ones((n_layers, n_cells)) * 0.5
+    energy = np.ones((n_layers, n_cells)) * 1.0
 
     # Create a tickless figure
     fig, (ax_density, ax_energy) = plt.subplots(ncols=2)
@@ -142,11 +142,15 @@ if __name__ == "__main__":
         for i in range(n_layers - 1):
             for j in range(n_cells):
 
-                # TODO: Improve this
-                change = energy[i, j] * energy[i + 1, j] * 0.1
-
                 sum_before = density[i, j] + density[i + 1, j]
 
+                # from higher to lower
+                change = energy[i + 1, j]
+                density[i, j] = density[i, j] / change
+                density[i + 1, j] = density[i + 1, j] * change
+
+                # from lower to higher
+                change = energy[i, j]
                 density[i, j] = density[i, j] / change
                 density[i + 1, j] = density[i + 1, j] * change
 
