@@ -11,13 +11,13 @@ import time
 from wind_automaton import apply_rule
 
 
-def update_py(density, energy):
+def update_py(state, weights):
     """Calls python-side function to update state"""
 
     # return density
     return np.reshape(
-        apply_rule(list(density.flatten()), list(energy.flatten()), density.shape[1]),
-        density.shape,
+        apply_rule(list(state.flatten()), list(weights.flatten()), state.shape[1]),
+        weights.shape,
     )
 
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     cell_radius = 1.0
 
     density = np.random.random((n_layers, n_cells))
-    energy = np.ones((n_layers, n_cells)) * 1.0
+    energy = np.ones((n_layers, n_cells)) * 0.25
 
     # Create a tickless figure
     fig, (ax_density, ax_energy) = plt.subplots(ncols=2)
@@ -126,43 +126,35 @@ if __name__ == "__main__":
         global density
 
         # Update density
-        density = update_py(density, energy)
-        # density = update_py(density, np.ones(density.shape))
+        density = update_py(density, np.ones(density.shape))
 
         # Update energy
-        energy = update_py(energy, np.ones(energy.shape))
-        # energy = update_py(energy, density**10)
+        energy = update_py(energy, density)
 
         # simulate physics
         energy_before = np.sum(energy)
         for j in range(n_cells // 4 - 2, n_cells // 4 + 2):
-            energy[0, j] += random.random() / 10
-        energy_after = np.sum(energy)
-        # renormalize to keep the system stable
-        energy = energy * (energy_before / energy_after)
+            energy[0, j] = 0.5 * random.random() + 0.5
+        energy = energy * (energy_before / np.sum(energy))
 
         # Simulate gravity
         density_before = np.sum(density)
         for i in range(n_layers - 1):
             for j in range(n_cells):
-                change = (1 / density[i, j]) * density[i + 1, j] * 0.05
+                change = (
+                    (1 / density[i, j]) * density[i + 1, j] * 0.2 * (0.5 - energy[i, j])
+                )
                 density[i, j] = density[i, j] + change
                 density[i + 1, j] = density[i + 1, j] - change
-        density_after = np.sum(density)
-        # renormalize for inaccuracies
-        density = density * (density_before / density_after)
+        density = density * (density_before / np.sum(density))
 
         # Draw colors
         density_colors = []
         energy_colors = []
         for layer_idx in range(n_layers):
             for cell_idx in range(n_cells):
-                density_colors.append(
-                    str(min(1, max(0, 1 - density[layer_idx, cell_idx])))
-                )
-                energy_colors.append(
-                    str(min(1, max(0, energy[layer_idx, cell_idx] - 1)))
-                )
+                density_colors.append(str(min(1, max(0, density[layer_idx, cell_idx]))))
+                energy_colors.append(str(min(1, max(0, energy[layer_idx, cell_idx]))))
         # And update them
         density_face_collection.set_facecolors(density_colors)
         energy_face_collection.set_facecolors(energy_colors)
