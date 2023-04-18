@@ -11,6 +11,32 @@ import time
 from wind_automaton import apply_rule
 
 
+def finite_difference(state):
+    """Computes finite difference dx, dy for every cell"""
+    di = np.empty(state.shape)
+    dj = np.empty(state.shape)
+    for i in range(state.shape[0]):
+        for j in range(state.shape[1]):
+            # horizontal (left-right)
+            if j == 0:
+                dj[i, j] = (state[i, 1] - state[i, -1]) / 2
+            elif j == state.shape[1] - 1:
+                dj[i, j] = (state[i, 0] - state[i, -2]) / 2
+            else:
+                dj[i, j] = (state[i, j + 1] - state[i, j - 1]) / 2
+
+            if state.shape[0] == 0:
+                raise Exception("One-layer case not handled yet.")
+            # vertical (left-right)
+            if i == 0:
+                di[i, j] = state[1, j] - state[0, j]
+            elif i == state.shape[0] - 1:
+                di[i, j] = state[-1, j] - state[-2, j]
+            else:
+                di[i, j] = (state[i + 1, j] - state[i - 1, j]) / 2
+    return di, dj
+
+
 def update_py(state, weights):
     """Calls python-side function to update state"""
 
@@ -99,6 +125,26 @@ if __name__ == "__main__":
     )
     ax_density.add_collection(density_face_collection)
 
+    # create initial configuration of density wind arrows
+    arrows = []
+    for layer_idx in range(n_layers):
+        for cell_idx in range(n_cells):
+            x = np.cos(cell_idx / (n_cells / (np.pi * 2))) * (
+                sphere_radius + layer_idx * cell_radius * 2
+            )
+            y = np.sin(cell_idx / (n_cells / (np.pi * 2))) * (
+                sphere_radius + layer_idx * cell_radius * 2
+            )
+            arrow = patches.Arrow(
+                x, y, random.random() - 0.5, random.random() - 0.5, width=0.3
+            )
+            arrows.append(arrow)
+    density_arrow_collection = clt.PatchCollection(
+        arrows,
+        color="blue",
+    )
+    ax_density.add_collection(density_arrow_collection)
+
     # create a initial configuration of cells in a PatchCollection for faster plotting
     paths = []
     for layer_idx in range(n_layers):
@@ -133,7 +179,7 @@ if __name__ == "__main__":
 
         # simulate sun by adding energy to some cells
         for j in range(n_cells // 4 - 2, n_cells // 4 + 2):
-            energy[0, j] = 10 * random.random() + 1
+            energy[0, j] = 5 * random.random() + 1
 
         # for balance, allow energy to escape
         energy[-1, :] = energy[-1, :] * 0.99
@@ -145,12 +191,12 @@ if __name__ == "__main__":
                 sum_before = density[i, j] + density[i + 1, j]
 
                 # from higher to lower
-                change = energy[i + 1, j]
+                change = (energy[i + 1, j] - 1) * 0.1 + 1
                 density[i, j] = density[i, j] / change
                 density[i + 1, j] = density[i + 1, j] * change
 
                 # from lower to higher
-                change = energy[i, j]
+                change = (energy[i, j] - 1) * 0.1 + 1
                 density[i, j] = density[i, j] / change
                 density[i + 1, j] = density[i + 1, j] * change
 
@@ -159,6 +205,39 @@ if __name__ == "__main__":
                 # ensure that the change is conserving energy
                 density[i, j] = density[i, j] * (sum_before / sum_after)
                 density[i + 1, j] = density[i + 1, j] * (sum_before / sum_after)
+
+        # compute derivatives
+        di, dj = finite_difference(density)
+
+        # create initial configuration of density wind arrows
+        global density_arrow_collection
+        density_arrow_collection.remove()
+        arrows = []
+        for layer_idx in range(n_layers):
+            for cell_idx in range(n_cells):
+                angle = cell_idx / (n_cells / (np.pi * 2))
+                x = np.cos(angle) * (sphere_radius + layer_idx * cell_radius * 2)
+                y = np.sin(angle) * (sphere_radius + layer_idx * cell_radius * 2)
+                # horizontal derivatives
+                dx = dj[layer_idx, cell_idx] * 5
+
+                # vertical derivatives (hide to focus on winds)
+                # dy = -(di[layer_idx, cell_idx] * 5)
+                dy = 0
+
+                arrow = patches.Arrow(
+                    x,
+                    y,
+                    np.cos(angle) * dy + np.sin(angle) * dx,
+                    np.sin(angle) * dy - np.cos(angle) * dx,
+                    width=0.3,
+                )
+                arrows.append(arrow)
+        density_arrow_collection = clt.PatchCollection(
+            arrows,
+            color="blue",
+        )
+        ax_density.add_collection(density_arrow_collection)
 
         # Draw colors
         density_colors = []
